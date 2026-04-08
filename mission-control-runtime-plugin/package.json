@@ -1,0 +1,24 @@
+{
+  "name": "mission-control-runtime",
+  "version": "0.1.6",
+  "description": "Portable OpenClaw control-plane bundle for ticketed non-trivial work",
+  "type": "module",
+  "main": "./index.js",
+  "files": [
+    "index.js",
+    "lib",
+    "tests",
+    "skills",
+    "workspace",
+    "openclaw.plugin.json",
+    "README.md"
+  ],
+  "peerDependencies": {
+    "openclaw": ">=2026.4.5 <2027.0.0"
+  },
+  "openclaw": {
+    "extensions": [
+      "./index.js"
+    ]
+  }
+}
