@@ -47,39 +47,41 @@ function defaultStore() {
   };
 }
 
-function sleepMs(ms) {
-  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
-}
-
 function withStoreLock(stateDir, callback, options = {}) {
-  const timeoutMs = Number(options.timeoutMs ?? 1500);
+  const timeoutMs = Number(options.timeoutMs ?? 2000);
   const retryDelayMs = Number(options.retryDelayMs ?? 25);
-  const start = Date.now();
-  const filePath = lockPath(stateDir);
-  ensureDir(path.dirname(filePath));
+  const staleAfterMs = Number(options.staleAfterMs ?? 15000);
+  const maxAttempts = Math.max(1, Math.ceil(timeoutMs / retryDelayMs));
+  const ticketLockPath = lockPath(stateDir);
+  ensureDir(path.dirname(ticketLockPath));
 
-  while (true) {
-    let fd = null;
+  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
     try {
-      fd = fs.openSync(filePath, "wx");
-      fs.writeFileSync(fd, String(process.pid), "utf8");
+      fs.writeFileSync(ticketLockPath, String(process.pid), { encoding: "utf8", flag: "wx" });
       try {
         return callback();
       } finally {
-        fs.closeSync(fd);
-        fs.unlinkSync(filePath);
+        fs.unlinkSync(ticketLockPath);
       }
     } catch (error) {
-      if (fd !== null) {
-        try { fs.closeSync(fd); } catch {}
-      }
       if (error?.code !== "EEXIST") throw error;
-      if (Date.now() - start > timeoutMs) {
-        throw new Error(`ticket store lock timeout after ${timeoutMs}ms: ${filePath}`);
+      try {
+        const stat = fs.statSync(ticketLockPath);
+        const ageMs = Date.now() - stat.mtimeMs;
+        if (ageMs > staleAfterMs) {
+          fs.unlinkSync(ticketLockPath);
+          continue;
+        }
+      } catch (statError) {
+        if (statError?.code !== "ENOENT") throw statError;
       }
-      sleepMs(retryDelayMs);
+      const waitUntil = Date.now() + retryDelayMs;
+      while (Date.now() < waitUntil) {
+        // busy-wait for a very short delay to avoid extra dependencies in sync code paths
+      }
     }
   }
+  throw new Error(`ticket store lock timeout after ${timeoutMs}ms: ${ticketLockPath}`);
 }
 
 function backupCorruptStore(filePath, rawText) {
