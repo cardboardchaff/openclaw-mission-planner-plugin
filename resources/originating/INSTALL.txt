@@ -1,10 +1,11 @@
-Mission Control Runtime 0.1.5
+Mission Control Runtime 0.1.6
 
-Archive:
-- mission-control-runtime-0.1.5.tgz
+Archive build (from extracted package source):
+1. cd resources/originating/mission-control-runtime-0.1.5
+2. tar -czf ../../releases/mission-control-runtime-0.1.6.tgz package
 
 Install on a fresh OpenClaw machine:
-1. openclaw plugins install ./mission-control-runtime-0.1.5.tgz
+1. openclaw plugins install ./mission-control-runtime-0.1.6.tgz
 2. openclaw gateway restart
 3. openclaw tickets bootstrap-workspace
 
@@ -12,3 +13,4 @@ Notes:
 - This version ships the bounded classification subsystem: task-shape model, decision table, executor routing, anti-pattern warnings, classification regression corpus, and ticket-stored classification data.
 - It also adds completion-discipline guidance for operational cutovers: finish internally and reply only with DONE+evidence or BLOCKED+exact blocker.
 - Current enforcement remains at the plugin hook layer rather than a hard OpenClaw core patch.
+- This release adds hook and tool-parameter alias compatibility for OpenClaw v2026.4.5.

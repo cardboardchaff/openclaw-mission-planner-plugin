@@ -1,0 +1,121 @@
+{
+  "id": "mission-control-runtime",
+  "name": "Mission Control Runtime",
+  "description": "Portable ticketed control-plane bundle that governs non-trivial OpenClaw work.",
+  "enabledByDefault": true,
+  "skills": [
+    "./skills"
+  ],
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "governedTools": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "default": [
+          "cron",
+          "sessions_spawn",
+          "sessions.spawn"
+        ]
+      },
+      "execPolicy": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "governBackground": {
+            "type": "boolean",
+            "default": true
+          },
+          "governElevated": {
+            "type": "boolean",
+            "default": true
+          },
+          "governPty": {
+            "type": "boolean",
+            "default": true
+          },
+          "governTimeoutOverSeconds": {
+            "type": "number",
+            "minimum": 1,
+            "default": 60
+          },
+          "governDangerousCommands": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      },
+      "singleActiveTicketPerSession": {
+        "type": "boolean",
+        "default": true
+      },
+      "requireBoundedClassification": {
+        "type": "boolean",
+        "default": true
+      },
+      "injectPromptGuidance": {
+        "type": "boolean",
+        "default": true
+      },
+      "bootstrap": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "manageAgentsBlock": {
+            "type": "boolean",
+            "default": true
+          },
+          "manageHeartbeatBlock": {
+            "type": "boolean",
+            "default": true
+          },
+          "installDocs": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      }
+    }
+  },
+  "uiHints": {
+    "governedTools": {
+      "label": "Always governed tools",
+      "help": "These tools always require an active ticket (aliases are normalized at runtime)."
+    },
+    "execPolicy.governBackground": {
+      "label": "Govern background exec",
+      "help": "Require a ticket before background host commands run."
+    },
+    "execPolicy.governElevated": {
+      "label": "Govern elevated exec",
+      "help": "Require a ticket before elevated host commands run."
+    },
+    "execPolicy.governPty": {
+      "label": "Govern PTY exec",
+      "help": "Require a ticket before PTY-driven host commands run."
+    },
+    "execPolicy.governTimeoutOverSeconds": {
+      "label": "Govern exec over seconds",
+      "help": "Require a ticket before host commands with timeout above this threshold run."
+    },
+    "execPolicy.governDangerousCommands": {
+      "label": "Govern dangerous command patterns",
+      "help": "Require a ticket before risky operational commands run."
+    },
+    "singleActiveTicketPerSession": {
+      "label": "Single active ticket per session",
+      "help": "Block opening a second active ticket in the same session until the first is closed."
+    },
+    "requireBoundedClassification": {
+      "label": "Require bounded classification",
+      "help": "Block governed work when the active ticket has no bounded classification data recorded."
+    },
+    "injectPromptGuidance": {
+      "label": "Inject prompt guidance",
+      "help": "Add a brief system-context reminder to use ticket tools for governed work."
+    }
+  }
+}

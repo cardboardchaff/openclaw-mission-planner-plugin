@@ -1,0 +1,72 @@
+[
+  {
+    "name": "lan-new-device-monitor",
+    "task": "create a log file on nas, every time a new device appears on the local network that hasn't been seen before log its details and message me here",
+    "expectedClassification": "continuous-capability",
+    "expectedExecutor": "container",
+    "forbiddenExecutors": ["cron", "subagent"]
+  },
+  {
+    "name": "nightly-service-restart",
+    "task": "restart nginx every night at 3am and verify the health endpoint afterward",
+    "expectedClassification": "scheduled-local",
+    "expectedExecutor": "cron",
+    "forbiddenExecutors": ["subagent"]
+  },
+  {
+    "name": "repo-review",
+    "task": "review this repo and propose the highest impact refactors",
+    "expectedClassification": "bounded-agentic",
+    "expectedExecutor": "subagent",
+    "forbiddenExecutors": ["cron", "container"]
+  },
+  {
+    "name": "host-op-once",
+    "task": "rotate this log file now and verify the new file exists",
+    "expectedClassification": "deterministic-host-op",
+    "expectedExecutor": "local-script",
+    "forbiddenExecutors": ["subagent"]
+  },
+  {
+    "name": "external-approval-workflow",
+    "task": "route incoming webhook approvals through n8n and notify me when a decision is required",
+    "expectedClassification": "external-workflow",
+    "expectedExecutor": "workflow-engine",
+    "forbiddenExecutors": ["cron"]
+  },
+  {
+    "name": "weekly-report",
+    "task": "generate a weekly disk usage report every Monday and save it to the nas",
+    "expectedClassification": "scheduled-local",
+    "expectedExecutor": "cron",
+    "forbiddenExecutors": ["subagent"]
+  },
+  {
+    "name": "persistent-file-sync",
+    "task": "continuously watch this folder and sync new files to the nas while keeping a persistent state database",
+    "expectedClassification": "continuous-capability",
+    "expectedExecutor": "container",
+    "forbiddenExecutors": ["cron"]
+  },
+  {
+    "name": "compare-vendors",
+    "task": "compare three hosting vendors and recommend which one we should use",
+    "expectedClassification": "bounded-agentic",
+    "expectedExecutor": "subagent",
+    "forbiddenExecutors": ["cron", "container"]
+  },
+  {
+    "name": "dns-renewal-check",
+    "task": "check certificate expiry every six hours and message me if any cert is within 14 days of expiry",
+    "expectedClassification": "scheduled-local",
+    "expectedExecutor": "cron",
+    "forbiddenExecutors": ["subagent"]
+  },
+  {
+    "name": "camera-motion-watcher",
+    "task": "run a python worker in docker that watches for camera motion events and messages me only on first detection after 10 minutes of silence",
+    "expectedClassification": "continuous-capability",
+    "expectedExecutor": "container",
+    "forbiddenExecutors": ["cron"]
+  }
+]
